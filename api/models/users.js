@@ -4,10 +4,6 @@ const Schema = mongoose.Schema;
 
 // Creating User Schema
 const UserSchema = new Schema({
-    _id: {
-        type: Schema.Types.ObjectId,
-        required: true
-    },
     username: {
         type: String,
         required: true
@@ -21,7 +17,7 @@ const UserSchema = new Schema({
         required: true
     },
     password: {
-        type: string,
+        type: String,
         required: true
     }
 });

@@ -1,103 +1,43 @@
 const express = require('express');
 const router = express.Router();
-const News = require('../models/news');
+
+const newsController = require('../controllers/news/news');
+const voteController = require('../controllers/news/vote');
+const commentController = require('../controllers/news/comment');
+
+
 
 // Get Method for News /api/news
-router.get('/', (req, res, next) => {
-    // Fetch Data from Database and return a Promise
-    News.find()
-        .select('title imgUrl content _id')
-        .exec()
-        .then(result => {
-            // Create and Map new Object From result One By One
-            const newsObj = {
-                count: result.length,
-                news: result.map(data => {
-                  return {
-                      title: data.title,
-                      imgUrl: data.imgUrl,
-                      content: data.content, 
-                      _id: data._id
-                  }  
-                })
-            };
-            // Send Req Back with newsObj
-            res.status(200).json(newsObj);
-        })
-        // Catching Errors
-        .catch(err => {
-            console.log('Error Occured', err);
-            res.status(500).json({
-                response: {
-                    status: 404,
-                    message: 'Data Not Found'
-                }
-            });
-        });
-});
+router.get('/', newsController.getAllNews);
 
 // Post Method for news /api/news
-router.post('/', (req, res, next) => {
-    // Create News Schema from Req Body
-    const news = new News({
-        title: req.body.title,
-        imgUrl: req.body.imgUrl || undefined,
-        content: req.body.content
-    });
-
-    // Save to Database which returns a promise
-    news.save()
-        .then(result => {
-            console.log(result);
-            res.status(201).json({
-                response: {
-                    status: 201,
-                    news: result
-                } 
-            });
-        })
-        // Catching Errors
-        .catch(err => {
-            console.log('Error Occured', err);
-            res.status(500).json({
-                response: {
-                    status: 404,
-                    message: 'Insert Failed'
-                }
-            });
-        });
-
-
-});
+router.post('/', newsController.postANews);
 
 // Get Method for Individual News /api/news/newsId
-router.get('/:newsId', (req, res, next) => {
-    res.status(200).json({
-        response: {
-            status: 200,
-            message: 'Individual News Get Method Works'
-        }
-    })
-});
+router.get('/:newsId', newsController.getANews);
 
 // Update Method for News /api/news/newsId
-router.put('/:newsId', (req, res, next) => {
-    res.status(200).json({
-        response: {
-            status: 200,
-            message: 'News Put Method Works'
-        }
-    })
-});
+router.put('/:newsId', newsController.updateNews);
 
 // Delete Method for News /api/news/newsId
-router.delete('/:newsId', (req, res, next) => {
-    res.status(200).json({
-        response: {
-            status: 200,
-            message: 'News Delete Method Works'
-        }
-    })
-});
+router.delete('/:newsId', newsController.deleteNews);
+
+// Upvote Method for News /api/news/newsId/upvote
+router.put('/:newsId/upvote', voteController.upvote);
+
+// Downvote Method for News /api/news/newsId/downvote
+router.put('/:newsId/downvote', voteController.downvote);
+
+// Comment Method for News /api/news/newsId/comment
+router.put('/:newsId/comments', commentController.putComment);
+
+// Get All Comment From a News /api/news/newsId/comments
+router.get('/:newsId/comments', commentController.getAllComment);
+
+// Update a Comment of a Particular News with CommentId /api/news/newsId/comments/commentId
+router.put('/:newsId/comments/:commentId', commentController.updateAComment);
+
+// Delete a Comment of Particula News with CommentId /api/news/newsId/comments/commentId
+router.delete('/:newsId/comments/:commentId', commentController.deleteAComment);
 
 module.exports = router;

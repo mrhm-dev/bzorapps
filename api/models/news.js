@@ -4,17 +4,14 @@ const timestamp = require('mongoose-timestamp');
 
 // Comment Schema
 const CommentSchema = new Schema({
-    _id: {
-        type: Schema.Types.ObjectId,
-        required: true
-    },
     comment: {
         type: String,
         required: true
     },
     userId: {
         type: Schema.Types.ObjectId,
-        ref: 'User'
+        ref: 'User',
+        required: true
     },
     createdAt: {
         type: Date,

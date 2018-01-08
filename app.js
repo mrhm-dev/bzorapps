@@ -9,13 +9,15 @@ const mongoose = require('mongoose');
 
 // Import all personal modules
 const news = require('./api/routes/news');
-const database = require('./api/config/db');
+const users = require('./api/routes/users');
+
+const config = require('./api/config/config');
 
 // Create instance of express
 const app = express();
 
 // Database Connection
-mongoose.connect(database.db);
+mongoose.connect(config.database.db);
 mongoose.Promise = global.Promise;
 
 // Check for Database Connection
@@ -53,6 +55,7 @@ app.get('/', (req, res) => {
 
 // Applyling news routes
 app.use('/api/news', news);
+app.use('/api/users', users);
 
 // Handling Errors
 app.use((req, res, next) => {
